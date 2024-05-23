@@ -7,11 +7,7 @@ $_SESSION['alogin']='';
 }
 if(isset($_POST['login']))
 {
- //code for captach verification
-if ($_POST["vercode"] != $_SESSION["vercode"] OR $_SESSION["vercode"]=='')  {
-        echo "<script>alert('Incorrect verification code');</script>" ;
-    } 
-        else {
+
 
 $username=$_POST['username'];
 $password=md5($_POST['password']);
@@ -28,7 +24,7 @@ echo "<script type='text/javascript'> document.location ='admin/dashboard.php'; 
 } else{
 echo "<script>alert('Invalid Details');</script>";
 }
-}
+
 }
 ?>
 <!DOCTYPE html>
@@ -79,11 +75,6 @@ echo "<script>alert('Invalid Details');</script>";
 <label>Password</label>
 <input class="form-control" type="password" name="password" autocomplete="off" required />
 </div>
- <div class="form-group">
-<label>Verification code : </label>
-<input type="text"  name="vercode" maxlength="5" autocomplete="off" required style="width: 150px; height: 25px;" />&nbsp;<img src="captcha.php">
-</div>  
-
  <button type="submit" name="login" class="btn btn-info">LOGIN </button>
 </form>
  </div>
