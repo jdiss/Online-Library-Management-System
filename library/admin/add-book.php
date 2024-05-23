@@ -130,8 +130,8 @@ foreach($results as $result)
 <p class="help-block">An ISBN is an International Standard Book Number.ISBN Must be unique</p>
 </div>
 
- <div class="form-group">
- <label>Price<span style="color:red;">*</span></label>
+ <div class="form-group" >
+ <label>Number of books<span style="color:red;">*</span></label>
  <input class="form-control" type="text" name="price" autocomplete="off"   required="required" />
  </div>
 <button type="submit" name="add" class="btn btn-info">Add </button>
