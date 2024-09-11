@@ -7,7 +7,6 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand">
-
                     <img src="assets/img/logo.png" />
                 </a>
 
@@ -19,6 +18,9 @@
         </div>
     </div>
     <!-- LOGO HEADER END-->
+    <?php
+    if(isset($_SESSION['alogin'])) {
+    ?>
     <section class="menu-section">
         <div class="container">
             <div class="row ">
@@ -66,3 +68,4 @@
             </div>
         </div>
     </section>
+<?php } ?>
