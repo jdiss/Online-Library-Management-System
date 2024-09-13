@@ -50,18 +50,25 @@ if(isset($_POST['login']))
             border: none;
             border-radius: 12px;
             box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-            background-color: rgba(255, 255, 255, 0.9);
             margin: 0 auto;
             max-width: 400px;
         }
         .panel-heading {
-            background-color: #3498db;
             color: white;
             font-weight: 600;
             border-top-left-radius: 12px;
             border-top-right-radius: 12px;
             padding: 20px;
             font-size: 20px;
+        }
+        .panel-heading-green {
+            background-color: #75b948;
+            font-weight: 600;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 20px;
+    font-size: 20px;
+    color: white;
         }
         .form-control {
             border-radius: 6px;
@@ -93,6 +100,9 @@ if(isset($_POST['login']))
                 font-size: 16px;
                 margin-bottom: 20px;
             }
+            .panel-heading-green {
+                background-color: #75b948;
+            }
         }
     </style>
 </head>
@@ -110,7 +120,7 @@ if(isset($_POST['login']))
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading text-center">
+                    <div class="text-center panel-heading-green">
                         Please Login
                     </div>
                     <div class="panel-body">
