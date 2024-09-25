@@ -55,9 +55,8 @@ header('location:manage-books.php');
         }
         .book-panel h5 {
             font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 20px;
             color: #333;
+            font-size: 20px;
         }
         .book-panel .row {
             margin-bottom: 15px;
@@ -71,6 +70,13 @@ header('location:manage-books.php');
         }
         .btn:hover {
             transform: translateY(-2px);
+        }
+        /* Added styles for right alignment of action buttons */
+        .book-panel .row .col-md-3 {
+            text-align: right;
+        }
+        .book-panel .row .col-md-3 button {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -148,7 +154,6 @@ header('location:manage-books.php');
 
         <div class="row">
             <div class="col-md-12">
-                <h4>Books Listing</h4>
                 <?php 
                 $sql = "SELECT tblbooks.BookName,tblcategory.CategoryName,tblauthors.AuthorName,tblbooks.ISBNNumber,tblbooks.BookPrice,tblbooks.id as bookid from  tblbooks join tblcategory on tblcategory.id=tblbooks.CatId join tblauthors on tblauthors.id=tblbooks.AuthorId";
                 $query = $dbh -> prepare($sql);
@@ -160,21 +165,18 @@ header('location:manage-books.php');
                     {               
                 ?>                                      
                 <div class="book-panel">
-                    <h5><?php echo htmlentities($result->BookName);?></h5>
+                    
                     <div class="row">
+                        <div class="col-md-8">
+                        <h5><?php echo htmlentities($result->BookName);?> <small>[<?php echo htmlentities($result->ISBNNumber);?>]</small></h5>
+                           <?php echo htmlentities($result->CategoryName) . " by " . $result->AuthorName;?>
+                        </div>
+                        <div class="col-md-1">
+                            
+                        </div>
+        
                         <div class="col-md-3">
-                            <strong>Category:</strong> <?php echo htmlentities($result->CategoryName);?>
-                        </div>
-                        <div class="col-md-3">
-                            <strong>Author:</strong> <?php echo htmlentities($result->AuthorName);?>
-                        </div>
-                        <div class="col-md-2">
-                            <strong>ISBN:</strong> <?php echo htmlentities($result->ISBNNumber);?>
-                        </div>
-                        <div class="col-md-2">
-                            <strong>Count:</strong> <?php echo htmlentities($result->BookPrice);?>
-                        </div>
-                        <div class="col-md-2">
+                            <a title="Issue Book" href="issue-book.php?bookid=<?php echo htmlentities($result->bookid);?>"><button class="btn btn-success btn-sm"><i class="fa fa-book"></i> Issue</button></a>
                             <a title="Edit Book" href="edit-book.php?bookid=<?php echo htmlentities($result->bookid);?>"><button class="btn btn-primary btn-sm"><i class="fa fa-edit "></i> Edit</button></a>
                             <a title="Delete Book" href="manage-books.php?del=<?php echo htmlentities($result->bookid);?>" onclick="return confirm('Are you sure you want to delete?');"><button class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Delete</button></a>
                         </div>
