@@ -14,7 +14,7 @@ $sql = "delete from tblcategory  WHERE id=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
-$_SESSION['delmsg']="Category deleted scuccessfully ";
+$_SESSION['delmsg']="Category deleted successfully ";
 header('location:manage-categories.php');
 
 }
@@ -29,6 +29,7 @@ header('location:manage-categories.php');
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Online Library Management System | Manage Categories</title>
+    <link rel="icon" href="assets/img/cropped-fav-32x32.png" sizes="32x32">
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME STYLE  -->
@@ -39,7 +40,28 @@ header('location:manage-categories.php');
     <link href="assets/css/style.css" rel="stylesheet" />
     <!-- GOOGLE FONT -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-
+    <style>
+        .category-panel {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .category-panel:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .category-panel h5 {
+            font-weight: 600;
+            color: #333;
+            font-size: 20px;
+        }
+        .category-panel .row {
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
       <!------MENU SECTION START-->
