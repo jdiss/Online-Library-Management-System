@@ -34,7 +34,8 @@ if (strlen($_SESSION['alogin']) == 0) {
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Online Library Management System | Edit Book</title>
+        <title>YBRCC Library Management System | Manage Issued Books</title>
+    <link rel="icon" href="assets/img/cropped-fav-32x32.png" sizes="32x32">
         <!-- BOOTSTRAP CORE STYLE  -->
         <link href="assets/css/bootstrap.css" rel="stylesheet" />
         <!-- FONT AWESOME STYLE  -->
@@ -55,7 +56,7 @@ if (strlen($_SESSION['alogin']) == 0) {
             <div class="container">
                 <div class="row pad-botm">
                     <div class="col-md-12">
-                        <h4 class="header-line">Add Book</h4>
+                       
 
                     </div>
 
@@ -139,9 +140,9 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <p class="help-block">An ISBN is an International Standard Book Number.ISBN Must be unique</p>
                                         </div>
 
-                                        <div class="form-group" style="display: none">
-                                            <label>Price in USD<span style="color:red;">*</span></label>
-                                            <input class="form-control" type="text" name="price" value="0" required="required" />
+                                        <div class="form-group">
+                                        <label>Number of books<span style="color:red;">*</span></label>
+                                            <input class="form-control" type="text" name="price" value="<?php echo htmlentities($result->BookPrice); ?>" required="required" />
                                         </div>
                                 <?php }
                                 } ?>
