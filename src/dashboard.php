@@ -56,7 +56,7 @@ if (strlen($_SESSION['alogin']) == 0) {
             <div class="dashboard-item text-center">
               <i class="fa fa-book text-primary"></i>
               <?php
-              $sql = "SELECT id from tblbooks ";
+              $sql = "SELECT id from tblbooks";
               $query = $dbh->prepare($sql);
               $query->execute();
               $listdbooks = $query->rowCount();

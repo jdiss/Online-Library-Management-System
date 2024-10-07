@@ -8,7 +8,24 @@ if (strlen($_SESSION['alogin']) == 0) {
 
     if (isset($_POST['issue'])) {
         $studentid = strtoupper($_POST['studentid']);
-        $bookid = $_POST['bookdetails'];
+        $sql = "SELECT FullName, Status FROM tblstudents WHERE StudentId = :studentid";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':studentid', $studentid, PDO::PARAM_STR);
+        $query->execute();
+
+        if ($query->rowCount() == 0) {
+            // Student not found, insert new student
+            $studentName = $_POST['studentname']; // Assuming student name is sent in the POST request
+            $insertSql = "INSERT INTO tblstudents (StudentId, FullName, Status) VALUES (:studentid, :fullname, 1)";
+            $insertQuery = $dbh->prepare($insertSql);
+            $insertQuery->bindParam(':studentid', $studentid, PDO::PARAM_STR);
+            $insertQuery->bindParam(':fullname', $studentName, PDO::PARAM_STR);
+            $insertQuery->execute();
+        }
+
+
+
+        $bookid = $_POST['bookid'];
         $sql = "INSERT INTO  tblissuedbookdetails(StudentID,BookId) VALUES(:studentid,:bookid)";
         $query = $dbh->prepare($sql);
         $query->bindParam(':studentid', $studentid, PDO::PARAM_STR);
@@ -23,7 +40,15 @@ if (strlen($_SESSION['alogin']) == 0) {
             header('location:manage-issued-books.php');
         }
 
+    } else {
+        $bookid = $_GET['bookid'];
+        $sql = "SELECT tblbooks.id,tblbooks.BookName,tblbooks.ISBNNumber,tblbooks.BookPrice from  tblbooks WHERE id=:bookid";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':bookid', $bookid, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
     }
+
     ?>
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -51,7 +76,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                     data: 'studentid=' + $("#studentid").val(),
                     type: "POST",
                     success: function (data) {
-                        $("#get_student_name").html(data);
+                        var studentData = JSON.parse(data);
+                        $("#studentname").val(studentData.name);
                         $("#loaderIcon").hide();
                     },
                     error: function () { }
@@ -78,6 +104,12 @@ if (strlen($_SESSION['alogin']) == 0) {
             .others {
                 color: red;
             }
+
+            .line-separator {
+                border-bottom: 1px solid #ccc;
+                width: 100%;
+                margin: 20px 0;
+            }
         </style>
 
 
@@ -92,7 +124,6 @@ if (strlen($_SESSION['alogin']) == 0) {
             <div class="container">
                 <div class="row pad-botm">
                     <div class="col-md-12">
-                        <h4 class="header-line">Issue a New Book</h4>
 
                     </div>
 
@@ -101,13 +132,26 @@ if (strlen($_SESSION['alogin']) == 0) {
                     <div class="col-md-10 col-sm-6 col-xs-12 col-md-offset-1"">
 <div class=" panel panel-info">
                         <div class="panel-heading">
-                            Issue a New Book
+                            Issue a Book
                         </div>
                         <div class="panel-body">
                             <form role="form" method="post">
-
                                 <div class="form-group">
-                                    <label>Srtudent id<span style="color:red;">*</span></label>
+
+                                    <?php
+                                    if ($query->rowCount() > 0) {
+                                        echo "<h3>" . $result['BookName'] . " (" . $result['ISBNNumber'] . ")</h3>";
+
+                                    } else {
+                                        echo "Book not found";
+                                    }
+                                    echo "<div class='line-separator'></div>";
+                                    ?>
+                                    <input class="form-control" type="hidden" name="bookid" id="bookid"
+                                        value="<?php echo $result['id']; ?>" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Id ( mobile number )<span style="color:red;">*</span></label>
                                     <input class="form-control" type="text" name="studentid" id="studentid"
                                         onBlur="getstudent()" autocomplete="off" required />
                                 </div>
@@ -117,23 +161,11 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 </div>
 
 
-
-
-
                                 <div class="form-group">
-                                    <label>ISBN Number or Book Title<span style="color:red;">*</span></label>
-                                    <input class="form-control" type="text" name="booikid" id="bookid" onBlur="getbook()"
-                                        required="required" />
-                                </div>
-
-                                <div class="form-group">
-
-                                    <select class="form-control" name="bookdetails" id="get_book_name" readonly>
-
-                                    </select>
+                                    <label>Name<span style="color:red;">*</span></label>
+                                    <input class="form-control" type="text" name="studentname" id="studentname" required />
                                 </div>
                                 <button type="submit" name="issue" id="submit" class="btn btn-info">Issue Book </button>
-
                             </form>
                         </div>
                     </div>
