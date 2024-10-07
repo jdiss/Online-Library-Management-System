@@ -21,14 +21,12 @@
         font-weight: 700;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         margin-left: auto;
-        /* Changed from margin-left: 20px; */
     }
 
     .navbar-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        /* Added to push title to right */
         width: 100%;
     }
 
@@ -64,16 +62,13 @@ if (isset($_SESSION['alogin'])) {
                             <li><a href="dashboard.php" class="menu-top-active"><i class="fa fa-dashboard"></i>
                                     Dashboard</a></li>
 
-
-                            
                             <li class="dropdown">
                                 <a href="manage-books.php"><i class="fa fa-book"></i> Books</a>
-
                             </li>
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-exchange"></i>
-                                Ledger </a>
-                                
+                                <a href="manage-issued-books.php"><i class="fa fa-exchange"></i>
+                                Inventory
+                             </a>
                             </li>
 
                             <li class="dropdown">

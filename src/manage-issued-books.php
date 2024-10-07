@@ -7,9 +7,6 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{ 
-
-
-
     ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -29,7 +26,37 @@ else{
     <link href="assets/css/style.css" rel="stylesheet" />
     <!-- GOOGLE FONT -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-
+    <style>
+        /* Modern flat design for the table */
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            font-size: 16px;
+            text-align: left;
+        }
+        .table th, .table td {
+            padding: 12px 20px; /* Increased padding for wider cells */
+            border-top: 1px solid #e0e0e0; /* Horizontal border */
+            border-bottom: 1px solid #e0e0e0; /* Horizontal border */
+        }
+        .table th {
+            background-color: #f5f5f5;
+            color: #333;
+            font-weight: bold;
+        }
+        .table tr {
+            transition: background-color 0.3s;
+        }
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .table .btn {
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
       <!------MENU SECTION START-->
@@ -39,7 +66,7 @@ else{
          <div class="container">
         <div class="row pad-botm">
             <div class="col-md-12">
-                <h4 class="header-line">Manage Issued Books</h4>
+                
     </div>
      <div class="row">
     <?php if($_SESSION['error']!="")
@@ -89,13 +116,13 @@ else{
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <table class="table" id="dataTables-example">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>Student Name</th>
                                             <th>Book Name</th>
-                                            <th>ISBN </th>
+                                            <th>ISBN</th>
                                             <th>Issued Date</th>
                                             <th>Return Date</th>
                                             <th>Action</th>
@@ -121,15 +148,13 @@ foreach($results as $result)
                                             {
                                                 echo htmlentities("Not Return Yet");
                                             } else {
-
-
-                                            echo htmlentities($result->ReturnDate);
-}
+                                                echo htmlentities($result->ReturnDate);
+                                            }
                                             ?></td>
                                             <td class="center">
-
-                                            <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>"><button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button> 
-                                         
+                                            <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>">
+                                                <button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button>
+                                            </a>
                                             </td>
                                         </tr>
  <?php $cnt=$cnt+1;}} ?>                                      

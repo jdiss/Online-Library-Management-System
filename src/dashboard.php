@@ -111,35 +111,6 @@ if (strlen($_SESSION['alogin']) == 0) {
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-3 col-sm-6">
-            <div class="dashboard-item text-center">
-              <i class="fa fa-user text-danger"></i>
-              <?php
-              $sql4 = "SELECT id from tblauthors ";
-              $query4 = $dbh->prepare($sql4);
-              $query4->execute();
-              $listdathrs = $query4->rowCount();
-              ?>
-              <h3><?php echo htmlentities($listdathrs); ?></h3>
-              <p>Authors Listed</p>
-            </div>
-          </div>
-
-          <div class="col-md-3 col-sm-6">
-            <div class="dashboard-item text-center">
-              <i class="fa fa-file-archive-o text-primary"></i>
-              <?php
-              $sql5 = "SELECT id from tblcategory ";
-              $query5 = $dbh->prepare($sql5);
-              $query5->execute();
-              $listdcats = $query5->rowCount();
-              ?>
-              <h3><?php echo htmlentities($listdcats); ?></h3>
-              <p>Listed Categories</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->
