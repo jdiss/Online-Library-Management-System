@@ -52,6 +52,7 @@
 <!-- LOGO HEADER END-->
 <?php
 if (isset($_SESSION['alogin'])) {
+    $current_page = basename($_SERVER['PHP_SELF']);
     ?>
     <nav class="menu-section">
         <div class="container">
@@ -59,14 +60,14 @@ if (isset($_SESSION['alogin'])) {
                 <div class="col-md-12">
                     <div class="navbar-collapse collapse">
                         <ul id="menu-top" class="nav navbar-nav">
-                            <li><a href="dashboard.php" class="menu-top-active"><i class="fa fa-dashboard"></i>
+                            <li><a href="dashboard.php" class="<?php echo ($current_page == 'dashboard.php') ? 'menu-top-active' : ''; ?>"><i class="fa fa-dashboard"></i>
                                     Dashboard</a></li>
 
                             <li class="dropdown">
-                                <a href="manage-books.php"><i class="fa fa-book"></i> Books</a>
+                                <a href="manage-books.php" class="<?php echo ($current_page == 'manage-books.php') ? 'menu-top-active' : ''; ?>"><i class="fa fa-book"></i> Books</a>
                             </li>
                             <li class="dropdown">
-                                <a href="manage-issued-books.php"><i class="fa fa-exchange"></i>
+                                <a href="manage-issued-books.php" class="<?php echo ($current_page == 'manage-issued-books.php') ? 'menu-top-active' : ''; ?>"><i class="fa fa-exchange"></i>
                                 Inventory
                              </a>
                             </li>
