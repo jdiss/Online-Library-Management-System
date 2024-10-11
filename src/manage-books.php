@@ -157,7 +157,22 @@ header('location:manage-books.php');
         <div class="row">
             <div class="col-md-12">
                 <?php 
-                $sql = "SELECT tblbooks.BookName,tblcategory.CategoryName,tblauthors.AuthorName,tblbooks.ISBNNumber,tblbooks.BookPrice,tblbooks.id as bookid from  tblbooks join tblcategory on tblcategory.id=tblbooks.CatId join tblauthors on tblauthors.id=tblbooks.AuthorId";
+                $sql = "
+                SELECT 
+                tblbooks.BookName,
+                tblcategory.CategoryName,
+                tblauthors.AuthorName,
+                tblbooks.ISBNNumber,
+                tblbooks.BookPrice,
+                tblbooks.id as bookid 
+                , (SELECT COUNT(*) FROM tblissuedbookdetails WHERE BookId = tblbooks.id and RetrunStatus is NULL) AS issued_count
+                , (SELECT COUNT(BookId) < tblbooks.`BookPrice` AS is_available 
+                FROM tblissuedbookdetails 
+                WHERE BookId = tblbooks.id AND RetrunStatus is NULL) AS is_available
+                from  tblbooks 
+                join tblcategory on tblcategory.id=tblbooks.CatId 
+                join tblauthors on tblauthors.id=tblbooks.AuthorId
+               ";
                 $query = $dbh -> prepare($sql);
                 $query->execute();
                 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -169,7 +184,7 @@ header('location:manage-books.php');
                 <div class="book-panel">
                     
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                         <h5><?php echo htmlentities($result->BookName);?> <small>[<?php echo htmlentities($result->ISBNNumber);?>]</small></h5>
                            <?php echo htmlentities($result->CategoryName) . " by " . $result->AuthorName;?>
                         </div>
@@ -177,8 +192,12 @@ header('location:manage-books.php');
                             
                         </div>
         
-                        <div class="col-md-3">
+                        <div class="col-md-4 text-right">
+                            <?php if($result->is_available == 1): ?>
                             <a title="Issue Book" href="issue-book.php?bookid=<?php echo htmlentities($result->bookid);?>"><button class="btn btn-success btn-sm"><i class="fa fa-book"></i> Issue</button></a>
+                            <?php else: ?>
+                            <button class="btn btn-warning btn-sm" disabled><i class="fa fa-book"></i> Not Available</button>
+                            <?php endif; ?>
                             <a title="Edit Book" href="edit-book.php?bookid=<?php echo htmlentities($result->bookid);?>"><button class="btn btn-primary btn-sm"><i class="fa fa-edit "></i> Edit</button></a>
                             <a title="Delete Book" href="manage-books.php?del=<?php echo htmlentities($result->bookid);?>" onclick="return confirm('Are you sure you want to delete?');"><button class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Delete</button></a>
                         </div>
