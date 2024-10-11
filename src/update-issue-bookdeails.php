@@ -70,7 +70,7 @@ if(strlen($_SESSION['alogin'])==0) {
                             <form role="form" method="post">
                                 <?php 
                                 $rid = intval($_GET['rid']);
-                                $sql = "SELECT tblstudents.FullName, tblbooks.BookName, tblbooks.ISBNNumber, tblissuedbookdetails.IssuesDate, tblissuedbookdetails.ReturnDate, tblissuedbookdetails.id as rid, tblissuedbookdetails.fine, tblissuedbookdetails.RetrunStatus FROM tblissuedbookdetails JOIN tblstudents ON tblstudents.StudentId=tblissuedbookdetails.StudentId JOIN tblbooks ON tblbooks.id=tblissuedbookdetails.BookId WHERE tblissuedbookdetails.id=:rid";
+                                $sql = "SELECT tblstudents.FullName,tblstudents.StudentId, tblbooks.BookName, tblbooks.ISBNNumber, tblissuedbookdetails.IssuesDate, tblissuedbookdetails.ReturnDate, tblissuedbookdetails.id as rid, tblissuedbookdetails.fine, tblissuedbookdetails.RetrunStatus FROM tblissuedbookdetails JOIN tblstudents ON tblstudents.StudentId=tblissuedbookdetails.StudentId JOIN tblbooks ON tblbooks.id=tblissuedbookdetails.BookId WHERE tblissuedbookdetails.id=:rid";
                                 $query = $dbh->prepare($sql);
                                 $query->bindParam(':rid', $rid, PDO::PARAM_STR);
                                 $query->execute();
@@ -79,7 +79,7 @@ if(strlen($_SESSION['alogin'])==0) {
                                     foreach($results as $result) { ?>                                      
                                         <div class="form-group">
                                             <label style="font-weight: bold;">Borrower Name:</label>
-                                            <p style="display: inline;padding-left: 10px;"><?php echo htmlentities($result->FullName); ?></p>
+                                            <p style="display: inline;padding-left: 10px;"><?php echo htmlentities($result->FullName); ?> (<?php echo htmlentities($result->StudentId); ?>)</p>
                                         </div>
                                         <div class="form-group">
                                             <label style="font-weight: bold;">Book Name:</label>
