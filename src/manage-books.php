@@ -95,15 +95,9 @@ header('location:manage-books.php');
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <select class="form-control" id="bookStatus">
-                                <option value="">All Books</option>
-                                <option value="available">Available</option>
-                                <option value="issued">Issued</option>
-                            </select>
-                        </div>
+                        
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 text-right">
                         <a href="add-book.php" class="btn btn-primary"><i class="fa fa-plus"></i> Book</a>
                         <a href="add-author.php" class="btn btn-primary" style="margin-left: 10px;"><i class="fa fa-plus"></i> Author</a>
                         <a href="add-category.php" class="btn btn-primary" style="margin-left: 10px;"><i class="fa fa-plus"></i> Category</a>
@@ -204,24 +198,6 @@ header('location:manage-books.php');
                     </div>
                 </div>
                 <?php }} ?>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>
