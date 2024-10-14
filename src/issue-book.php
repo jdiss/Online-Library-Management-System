@@ -167,6 +167,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     <input class="form-control" type="text" name="studentname" id="studentname" required />
                                 </div>
                                 <button type="submit" name="issue" id="submit" class="btn btn-info">Issue Book </button>
+                                <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
                             </form>
                         </div>
                     </div>

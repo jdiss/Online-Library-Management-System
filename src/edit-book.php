@@ -147,7 +147,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 <?php }
                                 } ?>
                                 <button type="submit" name="update" class="btn btn-info">Update </button>
-
+                                <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
                             </form>
                         </div>
                     </div>
