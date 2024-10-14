@@ -35,7 +35,7 @@ if (strlen($_SESSION['alogin']) == 0) {
     <html xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
-       <?php include('includes/meta.php'); ?>
+        <?php include('includes/meta.php'); ?>
     </head>
 
     <body>
@@ -49,6 +49,34 @@ if (strlen($_SESSION['alogin']) == 0) {
                     <div class="col-md-12">
                     </div>
 
+                </div>
+                <div class="row">
+                    <?php if ($_SESSION['error'] != "") { ?>
+                        <div class="col-md-6">
+                            <div class="alert alert-danger">
+                                <strong>Error :</strong>
+                                <?php echo htmlentities($_SESSION['error']); ?>
+                                <?php echo htmlentities($_SESSION['error'] = ""); ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <?php if ($_SESSION['msg'] != "") { ?>
+                        <div class="col-md-6">
+                            <div class="alert alert-success">
+                                <strong>Success :</strong>
+                                <?php echo htmlentities($_SESSION['msg']); ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <?php if ($_SESSION['updatemsg'] != "") { ?>
+                        <div class="col-md-6">
+                            <div class="alert alert-success">
+                                <strong>Success :</strong>
+                                <?php echo htmlentities($_SESSION['updatemsg']); ?>
+                                <?php echo htmlentities($_SESSION['updatemsg'] = ""); ?>
+                            </div>
+                        </div>
+                    <?php } ?>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3"">
