@@ -149,7 +149,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         required="required" />
                                 </div>
                                 <button type="submit" name="add" class="btn btn-info">Add </button>
-
+                                <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
                             </form>
                         </div>
                     </div>
