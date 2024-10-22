@@ -28,7 +28,7 @@ header('location:manage-authors.php');
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>YBRCC Library Management System | Add Author</title>
+    <title>YBRCC Library Management System | Manage Author</title>
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME STYLE  -->
@@ -129,28 +129,40 @@ header('location:manage-authors.php');
 
 
         </div>
+   =
             <div class="row">
                 <div class="col-md-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                           Authors Listing
+                          
+                           <div class="row">
+                    <div class="col-md-4">
+                    Authors Listing
+                    </div>
+                    <div class="col-md-4">
+                        
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <a href="add-author.php" class="btn btn-primary" style="margin-left: 10px;"><i class="fa fa-plus"></i>Add new Author</a>
+                       </div>
+                </div>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            
                                             <th>Author</th>
                                             <th>Number of Books</th>
                                             <th>Creation Date</th>
                                             
-                                            <th>Action</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-<?php $sql = "SELECT a.*, (SELECT COUNT(*) FROM tblbooks b WHERE b.AuthorId = a.id) AS BookCount FROM tblauthors a";
+<?php $sql = "SELECT a.*, (SELECT COUNT(*) FROM tblbooks b WHERE b.AuthorId = a.id) AS BookCount FROM tblauthors a order by a.AuthorName";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -160,11 +172,11 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {               ?>                                      
                                         <tr class="odd gradeX">
-                                            <td class="center"><?php echo htmlentities($cnt);?></td>
+                                            
                                             <td class="center"><?php echo htmlentities($result->AuthorName);?></td>
                                             <td class="center"><?php echo htmlentities($result->BookCount);?></td>
                                             <td class="center"><?php echo htmlentities($result->creationDate);?></td>
-                                            <td class="center">
+                                            <td class="text-right">
 
                                             <a href="edit-author.php?athrid=<?php echo htmlentities($result->id);?>"><button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button> 
                                             <?php if ($result->BookCount <= 0) { ?>

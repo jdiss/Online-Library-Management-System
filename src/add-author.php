@@ -101,7 +101,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     </div>
 
                                     <button type="submit" name="create" class="btn btn-info">Add </button>
-                                    <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
+                                    <a href="manage-authors.php" class="btn btn-secondary">Go Back</a>
 
                                 </form>
                             </div>
@@ -109,24 +109,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <div class=" panel panel-info">
-                            
-                            <div class="panel-body">
-                                <form role="form" method="post">
-                                    <div class="form-group">
-                                        <label>Author Name</label>
-                                         </div>
-
-                                    <button type="submit" name="create" class="btn btn-info">Add </button>
-                                   
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                
 
             </div>
         </div>

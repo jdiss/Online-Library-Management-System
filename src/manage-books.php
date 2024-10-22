@@ -98,10 +98,8 @@ header('location:manage-books.php');
                         
                     </div>
                     <div class="col-md-4 text-right">
-                        <a href="add-book.php" class="btn btn-primary"><i class="fa fa-plus"></i> Book</a>
-                        <a href="add-author.php" class="btn btn-primary" style="margin-left: 10px;"><i class="fa fa-plus"></i> Author</a>
-                        <a href="add-category.php" class="btn btn-primary" style="margin-left: 10px;"><i class="fa fa-plus"></i> Category</a>
-                    </div>
+                        <a href="add-book.php" class="btn btn-primary"><i class="fa fa-plus"></i>Add new Book</a>
+                        </div>
                 </div>
             </div>
         </div>

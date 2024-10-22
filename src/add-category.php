@@ -116,7 +116,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                 </div>
                                 <button type="submit" name="create" class="btn btn-info">Create </button>
-                                <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
+                                <a href="manage-categories.php" class="btn btn-secondary">Go Back</a>
                             </form>
                         </div>
                     </div>

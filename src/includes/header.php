@@ -79,11 +79,11 @@ if (isset($_SESSION['alogin'])) {
                             </li>
 
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>
-                                    Account <i class="fa fa-angle-down"></i></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-medkit"></i>
+                                    Settings <i class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="manage-authors.php"><i class="fa fa-pencil"></i>Authors</a></li>
-                                    <li><a href="change-password.php"><i class="fa fa-list"></i> Categories</a></li>
+                                    <li><a href="manage-categories.php"><i class="fa fa-list"></i> Categories</a></li>
                                     <li><a href="change-password.php"><i class="fa fa-key"></i> Change Password</a></li>
                                     <li><a href="logout.php"><i class="fa fa-sign-out"></i> Log Out</a></li>
                                 </ul>
