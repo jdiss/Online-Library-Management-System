@@ -60,22 +60,30 @@ if (isset($_SESSION['alogin'])) {
                 <div class="col-md-12">
                     <div class="navbar-collapse collapse">
                         <ul id="menu-top" class="nav navbar-nav">
-                            <li><a href="dashboard.php" class="<?php echo ($current_page == 'dashboard.php') ? 'menu-top-active' : ''; ?>"><i class="fa fa-dashboard"></i>
+                            <li><a href="dashboard.php"
+                                    class="<?php echo ($current_page == 'dashboard.php') ? 'menu-top-active' : ''; ?>"><i
+                                        class="fa fa-dashboard"></i>
                                     Dashboard</a></li>
 
                             <li class="dropdown">
-                                <a href="manage-books.php" class="<?php echo ($current_page == 'manage-books.php') ? 'menu-top-active' : ''; ?>"><i class="fa fa-book"></i> Books</a>
+                                <a href="manage-books.php"
+                                    class="<?php echo ($current_page == 'manage-books.php') ? 'menu-top-active' : ''; ?>"><i
+                                        class="fa fa-book"></i> Books</a>
                             </li>
                             <li class="dropdown">
-                                <a href="manage-issued-books.php" class="<?php echo ($current_page == 'manage-issued-books.php') ? 'menu-top-active' : ''; ?>"><i class="fa fa-exchange"></i>
-                                Inventory
-                             </a>
+                                <a href="manage-issued-books.php"
+                                    class="<?php echo ($current_page == 'manage-issued-books.php') ? 'menu-top-active' : ''; ?>"><i
+                                        class="fa fa-exchange"></i>
+                                    Inventory
+                                </a>
                             </li>
 
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>
                                     Account <i class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu">
+                                    <li><a href="manage-authors.php"><i class="fa fa-pencil"></i>Authors</a></li>
+                                    <li><a href="change-password.php"><i class="fa fa-list"></i> Categories</a></li>
                                     <li><a href="change-password.php"><i class="fa fa-key"></i> Change Password</a></li>
                                     <li><a href="logout.php"><i class="fa fa-sign-out"></i> Log Out</a></li>
                                 </ul>

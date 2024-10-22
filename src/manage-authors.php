@@ -28,7 +28,7 @@ header('location:manage-authors.php');
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Online Library Management System | Manage Authors</title>
+    <title>YBRCC Library Management System | Add Author</title>
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME STYLE  -->
@@ -39,7 +39,37 @@ header('location:manage-authors.php');
     <link href="assets/css/style.css" rel="stylesheet" />
     <!-- GOOGLE FONT -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-
+    <style>
+        /* Modern flat design for the table */
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            font-size: 16px;
+            text-align: left;
+        }
+        .table th, .table td {
+            padding: 12px 20px; /* Increased padding for wider cells */
+            border-top: 1px solid #e0e0e0; /* Horizontal border */
+            border-bottom: 1px solid #e0e0e0; /* Horizontal border */
+        }
+        .table th {
+            background-color: #f5f5f5;
+            color: #333;
+            font-weight: bold;
+        }
+        .table tr {
+            transition: background-color 0.3s;
+        }
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .table .btn {
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
       <!------MENU SECTION START-->
@@ -49,7 +79,7 @@ header('location:manage-authors.php');
          <div class="container">
         <div class="row pad-botm">
             <div class="col-md-12">
-                <h4 class="header-line">Manage Authors</h4>
+               
     </div>
      <div class="row">
     <?php if($_SESSION['error']!="")
@@ -108,19 +138,19 @@ header('location:manage-authors.php');
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <table class="table table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>Author</th>
-                                         
+                                            <th>Number of Books</th>
                                             <th>Creation Date</th>
-                                            <th>Updation Date</th>
+                                            
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-<?php $sql = "SELECT * from  tblauthors";
+<?php $sql = "SELECT a.*, (SELECT COUNT(*) FROM tblbooks b WHERE b.AuthorId = a.id) AS BookCount FROM tblauthors a";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -132,12 +162,16 @@ foreach($results as $result)
                                         <tr class="odd gradeX">
                                             <td class="center"><?php echo htmlentities($cnt);?></td>
                                             <td class="center"><?php echo htmlentities($result->AuthorName);?></td>
+                                            <td class="center"><?php echo htmlentities($result->BookCount);?></td>
                                             <td class="center"><?php echo htmlentities($result->creationDate);?></td>
-                                            <td class="center"><?php echo htmlentities($result->UpdationDate);?></td>
                                             <td class="center">
 
                                             <a href="edit-author.php?athrid=<?php echo htmlentities($result->id);?>"><button class="btn btn-primary"><i class="fa fa-edit "></i> Edit</button> 
-                                          <a href="manage-authors.php?del=<?php echo htmlentities($result->id);?>" onclick="return confirm('Are you sure you want to delete?');"" >  <button class="btn btn-danger"><i class="fa fa-pencil"></i> Delete</button>
+                                            <?php if ($result->BookCount <= 0) { ?>
+                                                <a href="manage-authors.php?del=<?php echo htmlentities($result->id);?>" onclick="return confirm('Are you sure you want to delete?');">
+                                                    <button class="btn btn-danger"><i class="fa fa-pencil"></i> Delete</button>
+                                                </a>
+                                            <?php } ?>
                                             </td>
                                         </tr>
  <?php $cnt=$cnt+1;}} ?>                                      
