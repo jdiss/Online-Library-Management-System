@@ -1,6 +1,6 @@
 <label> Category<span style="color:red;">*</span></label>
 <input type="text" class="form-control" name="category" id="category" required="required"
-    placeholder="Type to search or create category" onkeyup="fetchCategories(this.value)" onblur="hide()" value="<?php echo htmlentities($categoryName); ?>" />
+    placeholder="Type to search or create category" onkeyup="fetchCategories(this.value)"  value="<?php echo htmlentities($categoryName); ?>" />
 <div id="categorySuggestions" class="suggestions"></div>
 <script>
     function fetchCategories(query) {
@@ -21,10 +21,6 @@
             }
         };
         xhr.send();
-    }
-
-    function hide(){
-        document.getElementById('categorySuggestions').innerHTML = '';
     }
 
     function selectCategory(name, id) {

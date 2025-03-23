@@ -1,6 +1,6 @@
 <label>Author<span style="color:red;">*</span></label>
 <input type="text" class="form-control" name="author" id="author" required="required"
-    placeholder="Type to search or create author" onkeyup="fetchAuthors(this.value)" onblur="hideAuthors()" value="<?php echo htmlentities($authorName); ?>" />
+    placeholder="Type to search or create author" onkeyup="fetchAuthors(this.value)" value="<?php echo htmlentities($authorName); ?>" />
 <div id="authorSuggestions" class="suggestions"></div>
 <script>
     function fetchAuthors(query) {
@@ -21,10 +21,6 @@
             }
         };
         xhr.send();
-    }
-
-    function hideAuthors(){
-        document.getElementById('categoryAuthor').innerHTML = '';
     }
 
     function selectAuthor(name, id) {
