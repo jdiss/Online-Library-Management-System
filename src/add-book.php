@@ -12,13 +12,15 @@ if (strlen($_SESSION['alogin']) == 0) {
         $author = $_POST['author'];
         $isbn = $_POST['isbn'];
         $price = $_POST['price'];
-        $sql = "INSERT INTO  tblbooks(BookName,CatId,AuthorId,ISBNNumber,BookPrice) VALUES(:bookname,:category,:author,:isbn,:price)";
+        $classification_number = $_POST['classification_number']; // New line for classification number
+        $sql = "INSERT INTO tblbooks(BookName, CatId, AuthorId, ISBNNumber, BookPrice, classification_number) VALUES(:bookname, :category, :author, :isbn, :price, :classification_number)"; // Updated SQL query
         $query = $dbh->prepare($sql);
         $query->bindParam(':bookname', $bookname, PDO::PARAM_STR);
         $query->bindParam(':category', $category, PDO::PARAM_STR);
         $query->bindParam(':author', $author, PDO::PARAM_STR);
         $query->bindParam(':isbn', $isbn, PDO::PARAM_STR);
         $query->bindParam(':price', $price, PDO::PARAM_STR);
+        $query->bindParam(':classification_number', $classification_number, PDO::PARAM_STR); // Binding the new parameter
         $query->execute();
         $lastInsertId = $dbh->lastInsertId();
         if ($lastInsertId) {
@@ -141,6 +143,12 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         autocomplete="off" />
                                     <p class="help-block">An ISBN is an International Standard Book Number.ISBN Must be
                                         unique</p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Classification Number<span style="color:red;">*</span></label>
+                                    <input class="form-control" type="text" name="classification_number" required="required"
+                                        autocomplete="off" />
+                                    <p class="help-block">Classification number helps in organizing books in the library.</p>
                                 </div>
 
                                 <div class="form-group">

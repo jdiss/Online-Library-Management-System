@@ -12,14 +12,16 @@ if (strlen($_SESSION['alogin']) == 0) {
         $author = $_POST['author'];
         $isbn = $_POST['isbn'];
         $price = $_POST['price'];
+        $classification_number = $_POST['classification_number']; // New line for classification number
         $bookid = intval($_GET['bookid']);
-        $sql = "update  tblbooks set BookName=:bookname,CatId=:category,AuthorId=:author,ISBNNumber=:isbn,BookPrice=:price where id=:bookid";
+        $sql = "update  tblbooks set BookName=:bookname,CatId=:category,AuthorId=:author,ISBNNumber=:isbn,BookPrice=:price,classification_number=:classification_number where id=:bookid";
         $query = $dbh->prepare($sql);
         $query->bindParam(':bookname', $bookname, PDO::PARAM_STR);
         $query->bindParam(':category', $category, PDO::PARAM_STR);
         $query->bindParam(':author', $author, PDO::PARAM_STR);
         $query->bindParam(':isbn', $isbn, PDO::PARAM_STR);
         $query->bindParam(':price', $price, PDO::PARAM_STR);
+        $query->bindParam(':classification_number', $classification_number, PDO::PARAM_STR); // Binding the new parameter
         $query->bindParam(':bookid', $bookid, PDO::PARAM_STR);
         $query->execute();
         $_SESSION['msg'] = "Book info updated successfully";
@@ -71,7 +73,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                             <form role="form" method="post">
                                 <?php
                                 $bookid = intval($_GET['bookid']);
-                                $sql = "SELECT tblbooks.BookName,tblcategory.CategoryName,tblcategory.id as cid,tblauthors.AuthorName,tblauthors.id as athrid,tblbooks.ISBNNumber,tblbooks.BookPrice,tblbooks.id as bookid from  tblbooks join tblcategory on tblcategory.id=tblbooks.CatId join tblauthors on tblauthors.id=tblbooks.AuthorId where tblbooks.id=:bookid";
+                                $sql = "SELECT tblbooks.BookName,tblcategory.CategoryName,tblcategory.id as cid,tblauthors.AuthorName,tblauthors.id as athrid,tblbooks.ISBNNumber,tblbooks.BookPrice,tblbooks.id as bookid,tblbooks.classification_number from  tblbooks join tblcategory on tblcategory.id=tblbooks.CatId join tblauthors on tblauthors.id=tblbooks.AuthorId where tblbooks.id=:bookid";
                                 $query = $dbh->prepare($sql);
                                 $query->bindParam(':bookid', $bookid, PDO::PARAM_STR);
                                 $query->execute();
@@ -136,8 +138,13 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                         <div class="form-group">
                                             <label>ISBN Number<span style="color:red;">*</span></label>
-                                            <input class="form-control" type="text" name="isbn" value="<?php echo htmlentities($result->ISBNNumber); ?>" required="required" />
-                                            <p class="help-block">An ISBN is an International Standard Book Number.ISBN Must be unique</p>
+                                            <input class="form-control" type="text" name="isbn" value="<?php echo htmlentities($result->ISBNNumber); ?>" />
+                                            <p class="help-block">An ISBN is an International Standard Book Number. ISBN must be unique</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Classification Number<span style="color:red;">*</span></label>
+                                            <input class="form-control" type="text" name="classification_number" value="<?php echo htmlentities($result->classification_number); ?>" />
+                                            <p class="help-block">Classification number helps in organizing books in the library.</p>
                                         </div>
 
                                         <div class="form-group">

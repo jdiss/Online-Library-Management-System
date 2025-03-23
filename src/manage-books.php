@@ -156,6 +156,7 @@ header('location:manage-books.php');
                 tblauthors.AuthorName,
                 tblbooks.ISBNNumber,
                 tblbooks.BookPrice,
+                tblbooks.classification_number,
                 tblbooks.id as bookid 
                 , (SELECT COUNT(*) FROM tblissuedbookdetails WHERE BookId = tblbooks.id and RetrunStatus is NULL) AS issued_count
                 , (SELECT COUNT(BookId) < tblbooks.`BookPrice` AS is_available 
@@ -177,8 +178,23 @@ header('location:manage-books.php');
                     
                     <div class="row">
                         <div class="col-md-7">
-                        <h5><?php echo htmlentities($result->BookName);?> <small>[<?php echo htmlentities($result->ISBNNumber);?>]</small></h5>
-                           <?php echo htmlentities($result->CategoryName) . " by " . $result->AuthorName;?>
+                        <h5>
+                        <?php echo htmlentities($result->BookName);?> 
+                        </h5>
+                        <div>
+                        <?php if (!empty($result->ISBNNumber)): ?>
+                            <span class="badge badge-pill"  style="background-color: #0d476d; color: white; padding: 10px;">
+                               ISBN: <?php echo htmlentities($result->ISBNNumber);?>
+                            </span>
+                        <?php endif; ?>
+                        <?php if (!empty($result->classification_number)): ?>
+                            <span class="badge badge-pill" style="background-color: #0d476d; color: white; padding: 10px;">
+                               Classification: <?php echo htmlentities($result->classification_number);?>
+                                </span>
+                        <?php endif; ?>
+                        </div>
+                        <?php echo htmlentities($result->CategoryName) . " by " . $result->AuthorName;?>
+                           
                         </div>
                         <div class="col-md-1">
                             
