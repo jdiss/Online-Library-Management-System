@@ -9,6 +9,18 @@ if (strlen($_SESSION['alogin']) == 0) {
     if (isset($_POST['add'])) {
         $bookname = $_POST['bookname'];
         $category = $_POST['category'];
+        $categoryId = $_POST['categoryId'];
+
+        if($categoryId == 0){
+            $status = 1;
+            $sql = "INSERT INTO  tblcategory(CategoryName,Status) VALUES(:category,:status)";
+            $query = $dbh->prepare($sql);
+            $query->bindParam(':category', $category, PDO::PARAM_STR);
+            $query->bindParam(':status', $status, PDO::PARAM_STR);
+            $query->execute();
+            $categoryId = $dbh->lastInsertId();
+        }
+
         $author = $_POST['author'];
         $isbn = $_POST['isbn'];
         $price = $_POST['price'];
@@ -16,7 +28,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $sql = "INSERT INTO tblbooks(BookName, CatId, AuthorId, ISBNNumber, BookPrice, classification_number) VALUES(:bookname, :category, :author, :isbn, :price, :classification_number)"; // Updated SQL query
         $query = $dbh->prepare($sql);
         $query->bindParam(':bookname', $bookname, PDO::PARAM_STR);
-        $query->bindParam(':category', $category, PDO::PARAM_STR);
+        $query->bindParam(':category', $categoryId, PDO::PARAM_STR);
         $query->bindParam(':author', $author, PDO::PARAM_STR);
         $query->bindParam(':isbn', $isbn, PDO::PARAM_STR);
         $query->bindParam(':price', $price, PDO::PARAM_STR);
@@ -95,24 +107,56 @@ if (strlen($_SESSION['alogin']) == 0) {
 
                                 <div class="form-group">
                                     <label> Category<span style="color:red;">*</span></label>
-                                    <select class="form-control" name="category" required="required">
-                                        <option value=""> Select Category</option>
-                                        <?php
-                                        $status = 1;
-                                        $sql = "SELECT * from  tblcategory where Status=:status";
-                                        $query = $dbh->prepare($sql);
-                                        $query->bindParam(':status', $status, PDO::PARAM_STR);
-                                        $query->execute();
-                                        $results = $query->fetchAll(PDO::FETCH_OBJ);
-                                        $cnt = 1;
-                                        if ($query->rowCount() > 0) {
-                                            foreach ($results as $result) { ?>
-                                                <option value="<?php echo htmlentities($result->id); ?>">
-                                                    <?php echo htmlentities($result->CategoryName); ?>
-                                                </option>
-                                            <?php }
-                                        } ?>
-                                    </select>
+                                    <input type="text" class="form-control" name="category" id="category" required="required" placeholder="Type to search or create category" onkeyup="fetchCategories(this.value)" />
+                                    <div id="categorySuggestions" class="suggestions"></div>
+                                    <script>
+                                        function fetchCategories(query) {
+                                            if (query.length < 2) {
+                                                document.getElementById('categorySuggestions').innerHTML = '';
+                                                return;
+                                            }
+                                            var xhr = new XMLHttpRequest();
+                                            xhr.open('GET', 'fetch_categories.php?category=' + encodeURIComponent(query), true);
+                                            xhr.onload = function() {
+                                                if (this.status == 200) {
+                                                    var suggestions = JSON.parse(this.responseText);
+                                                    var suggestionsHtml = '';
+                                                    suggestions.forEach(function(category) {
+                                                        suggestionsHtml += '<div class="suggestion-item" onclick="selectCategory(\'' + category.name + '\', ' + category.id + ')">' + category.name + '</div>';
+                                                    });
+                                                    document.getElementById('categorySuggestions').innerHTML = suggestionsHtml;
+                                                }
+                                            };
+                                            xhr.send();
+                                        }
+
+                                        function selectCategory(name, id) {
+                                            document.getElementById('category').value = name;
+                                            document.getElementById('categoryId').value = id;
+                                            document.getElementById('categorySuggestions').innerHTML = '';
+                                    
+                                        }
+                                    </script>
+                                    <input type="hidden" name="categoryId" id="categoryId" value="0" />
+                                    <style>
+                                        .suggestions {
+                                            border: 1px solid #ccc;
+                                            max-height: 150px;
+                                            overflow-y: auto;
+                                            position: absolute;
+                                            z-index: 1000;
+                                            background: white;
+                                        }
+                                        .suggestion-item {
+                                            padding: 10px;
+                                            cursor: pointer;
+                                            border-bottom: 1px dotted #ccc;
+                                            width: 100%;
+                                        }
+                                        .suggestion-item:hover {
+                                            background-color: #f0f0f0;
+                                        }
+                                    </style>
                                 </div>
 
 
@@ -138,23 +182,21 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 </div>
 
                                 <div class="form-group">
-                                    <label>ISBN Number<span style="color:red;">*</span></label>
-                                    <input class="form-control" type="text" name="isbn" required="required"
-                                        autocomplete="off" />
+                                    <label>ISBN Number</label>
+                                    <input class="form-control" type="text" name="isbn" />
                                     <p class="help-block">An ISBN is an International Standard Book Number.ISBN Must be
                                         unique</p>
                                 </div>
                                 <div class="form-group">
-                                    <label>Classification Number<span style="color:red;">*</span></label>
-                                    <input class="form-control" type="text" name="classification_number" required="required"
-                                        autocomplete="off" />
+                                    <label>Classification Number</label>
+                                    <input class="form-control" type="text" name="classification_number"/>
                                     <p class="help-block">Classification number helps in organizing books in the library.</p>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Number of books<span style="color:red;">*</span></label>
                                     <input class="form-control" type="text" name="price" autocomplete="off"
-                                        required="required" />
+                                        required="required" value="0" />
                                 </div>
                                 <button type="submit" name="add" class="btn btn-info">Add </button>
                                 <a href="manage-books.php" class="btn btn-secondary">Go Back</a>

@@ -137,12 +137,12 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         </div>
 
                                         <div class="form-group">
-                                            <label>ISBN Number<span style="color:red;">*</span></label>
+                                            <label>ISBN Number</label>
                                             <input class="form-control" type="text" name="isbn" value="<?php echo htmlentities($result->ISBNNumber); ?>" />
                                             <p class="help-block">An ISBN is an International Standard Book Number. ISBN must be unique</p>
                                         </div>
                                         <div class="form-group">
-                                            <label>Classification Number<span style="color:red;">*</span></label>
+                                            <label>Classification Number</label>
                                             <input class="form-control" type="text" name="classification_number" value="<?php echo htmlentities($result->classification_number); ?>" />
                                             <p class="help-block">Classification number helps in organizing books in the library.</p>
                                         </div>

@@ -165,6 +165,7 @@ header('location:manage-books.php');
                 from  tblbooks 
                 join tblcategory on tblcategory.id=tblbooks.CatId 
                 join tblauthors on tblauthors.id=tblbooks.AuthorId
+                order by tblbooks.id desc
                ";
                 $query = $dbh -> prepare($sql);
                 $query->execute();
