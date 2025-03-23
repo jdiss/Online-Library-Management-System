@@ -27,6 +27,22 @@ if (strlen($_SESSION['alogin']) == 0) {
         }
 
         $author = $_POST['author'];
+        $authorId = $_POST['authorId'];
+
+        $authorSql = "SELECT id FROM tblauthors where AuthorName=:author";
+        $authorQuery = $dbh->prepare($authorSql);
+        $authorQuery->bindParam(':author', $author, PDO::PARAM_STR);
+        $authorQuery->execute();
+
+        if ($authorQuery->rowCount() == 0){
+            $author = $_POST['author'];
+            $sql = "INSERT INTO  tblauthors(AuthorName) VALUES(:author)";
+            $query = $dbh->prepare($sql);
+            $query->bindParam(':author', $author, PDO::PARAM_STR);
+            $query->execute();
+            $authorId = $dbh->lastInsertId();
+        }
+
         $isbn = $_POST['isbn'];
         $price = $_POST['price'];
         $classification_number = $_POST['classification_number']; // New line for classification number
@@ -35,7 +51,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $query = $dbh->prepare($sql);
         $query->bindParam(':bookname', $bookname, PDO::PARAM_STR);
         $query->bindParam(':category', $categoryId, PDO::PARAM_STR);
-        $query->bindParam(':author', $author, PDO::PARAM_STR);
+        $query->bindParam(':author', $authorId, PDO::PARAM_STR);
         $query->bindParam(':isbn', $isbn, PDO::PARAM_STR);
         $query->bindParam(':price', $price, PDO::PARAM_STR);
         $query->bindParam(':classification_number', $classification_number, PDO::PARAM_STR); // Binding the new parameter
@@ -112,27 +128,10 @@ if (strlen($_SESSION['alogin']) == 0) {
 
 
                                         <div class="form-group">
-                                            <label> Author<span style="color:red;">*</span></label>
-                                            <select class="form-control" name="author" required="required">
-                                                <option value="<?php echo htmlentities($result->athrid); ?>"> <?php echo htmlentities($athrname = $result->AuthorName); ?></option>
-                                                <?php
-
-                                                $sql2 = "SELECT * from  tblauthors ";
-                                                $query2 = $dbh->prepare($sql2);
-                                                $query2->execute();
-                                                $result2 = $query2->fetchAll(PDO::FETCH_OBJ);
-                                                if ($query2->rowCount() > 0) {
-                                                    foreach ($result2 as $ret) {
-                                                        if ($athrname == $ret->AuthorName) {
-                                                            continue;
-                                                        } else {
-
-                                                ?>
-                                                            <option value="<?php echo htmlentities($ret->id); ?>"><?php echo htmlentities($ret->AuthorName); ?></option>
-                                                <?php }
-                                                    }
-                                                } ?>
-                                            </select>
+                                            <?php $authorName = $result->AuthorName;?>
+                                            <?php $authorId = $result->athrid;?>
+                                            <?php include 'includes/authors.php' ; ?>
+                                            
                                         </div>
 
                                         <div class="form-group">

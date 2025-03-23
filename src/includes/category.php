@@ -37,18 +37,20 @@
 <input type="hidden" name="categoryId" id="categoryId" value="<?php echo htmlentities($categoryId); ?>" />
 <style>
     .suggestions {
-        border: 1px solid #ccc;
         max-height: 150px;
         overflow-y: auto;
         position: absolute;
         z-index: 1000;
         background: white;
+        width: 80%;
     }
 
     .suggestion-item {
         padding: 10px;
         cursor: pointer;
         border-bottom: 1px dotted #ccc;
+        border-left: 1px dotted #ccc;
+        border-right: 1px dotted #ccc;
         width: 100%;
     }
 

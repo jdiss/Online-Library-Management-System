@@ -28,6 +28,22 @@ if (strlen($_SESSION['alogin']) == 0) {
         }
 
         $author = $_POST['author'];
+        $authorId = $_POST['authorId'];
+
+        $authorSql = "SELECT id FROM tblauthors where AuthorName=:author";
+        $authorQuery = $dbh->prepare($authorSql);
+        $authorQuery->bindParam(':author', $author, PDO::PARAM_STR);
+        $authorQuery->execute();
+
+        if ($authorQuery->rowCount() == 0){
+            $author = $_POST['author'];
+            $sql = "INSERT INTO  tblauthors(AuthorName) VALUES(:author)";
+            $query = $dbh->prepare($sql);
+            $query->bindParam(':author', $author, PDO::PARAM_STR);
+            $query->execute();
+            $authorId = $dbh->lastInsertId();
+        }
+
         $isbn = $_POST['isbn'];
         $price = $_POST['price'];
         $classification_number = $_POST['classification_number']; // New line for classification number
@@ -35,12 +51,13 @@ if (strlen($_SESSION['alogin']) == 0) {
         $query = $dbh->prepare($sql);
         $query->bindParam(':bookname', $bookname, PDO::PARAM_STR);
         $query->bindParam(':category', $categoryId, PDO::PARAM_STR);
-        $query->bindParam(':author', $author, PDO::PARAM_STR);
+        $query->bindParam(':author', $authorId, PDO::PARAM_STR);
         $query->bindParam(':isbn', $isbn, PDO::PARAM_STR);
         $query->bindParam(':price', $price, PDO::PARAM_STR);
         $query->bindParam(':classification_number', $classification_number, PDO::PARAM_STR); // Binding the new parameter
         $query->execute();
         $lastInsertId = $dbh->lastInsertId();
+        
         if ($lastInsertId) {
             $_SESSION['msg'] = "Book Listed successfully";
             header('location:manage-books.php');
@@ -112,31 +129,16 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 </div>
 
                                 <div class="form-group">
-                                <?php $categoryName = ''?>
-                                <?php $categoryId = 0?>
-                                <?php include('includes/category.php'); ?>
+                                    <?php $categoryName = ''?>
+                                    <?php $categoryId = 0?>
+                                    <?php include 'includes/category.php' ; ?>
                                 </div>
 
 
                                 <div class="form-group">
-                                    <label> Author<span style="color:red;">*</span></label>
-                                    <select class="form-control" name="author" required="required">
-                                        <option value=""> Select Author</option>
-                                        <?php
-
-                                        $sql = "SELECT * from  tblauthors ";
-                                        $query = $dbh->prepare($sql);
-                                        $query->execute();
-                                        $results = $query->fetchAll(PDO::FETCH_OBJ);
-                                        $cnt = 1;
-                                        if ($query->rowCount() > 0) {
-                                            foreach ($results as $result) { ?>
-                                                <option value="<?php echo htmlentities($result->id); ?>">
-                                                    <?php echo htmlentities($result->AuthorName); ?>
-                                                </option>
-                                            <?php }
-                                        } ?>
-                                    </select>
+                                    <?php $authorName = ''?>
+                                    <?php $authorId = 0?>
+                                    <?php include 'includes/authors.php' ; ?>
                                 </div>
 
                                 <div class="form-group">
