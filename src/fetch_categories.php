@@ -19,6 +19,6 @@ if (!empty($_GET["category"])) {
         } while ($result = $query->fetch(PDO::FETCH_OBJ));
         echo json_encode($response);
     } else {
-        echo json_encode(array('error' => 'Category not found'));
+        echo json_encode([]);
     }
 }?>

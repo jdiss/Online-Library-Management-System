@@ -9,6 +9,23 @@ if (strlen($_SESSION['alogin']) == 0) {
     if (isset($_POST['update'])) {
         $bookname = $_POST['bookname'];
         $category = $_POST['category'];
+        $categoryId = $_POST['categoryId'];
+
+        $catSql = "SELECT id FROM tblcategory where CategoryName=:category";
+        $catQuery = $dbh->prepare($catSql);
+        $catQuery->bindParam(':category', $category, PDO::PARAM_STR);
+        $catQuery->execute();
+
+        if ($catQuery->rowCount() == 0){
+            $status = 1;
+            $sql = "INSERT INTO  tblcategory(CategoryName,Status) VALUES(:category,:status)";
+            $query = $dbh->prepare($sql);
+            $query->bindParam(':category', $category, PDO::PARAM_STR);
+            $query->bindParam(':status', $status, PDO::PARAM_STR);
+            $query->execute();
+            $categoryId = $dbh->lastInsertId();
+        }
+
         $author = $_POST['author'];
         $isbn = $_POST['isbn'];
         $price = $_POST['price'];
@@ -17,7 +34,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $sql = "update  tblbooks set BookName=:bookname,CatId=:category,AuthorId=:author,ISBNNumber=:isbn,BookPrice=:price,classification_number=:classification_number where id=:bookid";
         $query = $dbh->prepare($sql);
         $query->bindParam(':bookname', $bookname, PDO::PARAM_STR);
-        $query->bindParam(':category', $category, PDO::PARAM_STR);
+        $query->bindParam(':category', $categoryId, PDO::PARAM_STR);
         $query->bindParam(':author', $author, PDO::PARAM_STR);
         $query->bindParam(':isbn', $isbn, PDO::PARAM_STR);
         $query->bindParam(':price', $price, PDO::PARAM_STR);
@@ -88,27 +105,9 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         </div>
 
                                         <div class="form-group">
-                                            <label> Category<span style="color:red;">*</span></label>
-                                            <select class="form-control" name="category" required="required">
-                                                <option value="<?php echo htmlentities($result->cid); ?>"> <?php echo htmlentities($catname = $result->CategoryName); ?></option>
-                                                <?php
-                                                $status = 1;
-                                                $sql1 = "SELECT * from  tblcategory where Status=:status";
-                                                $query1 = $dbh->prepare($sql1);
-                                                $query1->bindParam(':status', $status, PDO::PARAM_STR);
-                                                $query1->execute();
-                                                $resultss = $query1->fetchAll(PDO::FETCH_OBJ);
-                                                if ($query1->rowCount() > 0) {
-                                                    foreach ($resultss as $row) {
-                                                        if ($catname == $row->CategoryName) {
-                                                            continue;
-                                                        } else {
-                                                ?>
-                                                            <option value="<?php echo htmlentities($row->id); ?>"><?php echo htmlentities($row->CategoryName); ?></option>
-                                                <?php }
-                                                    }
-                                                } ?>
-                                            </select>
+                                            <?php $categoryName = $result->CategoryName;?>
+                                            <?php $categoryId = $result->cid;?>
+                                        <?php include('includes/category.php'); ?>
                                         </div>
 
 
