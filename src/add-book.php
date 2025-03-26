@@ -11,13 +11,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $category = $_POST['category'];
         $categoryId = $_POST['categoryId'];
 
-        
-        $catSql = "SELECT id FROM tblcategory where CategoryName=:category";
-        $catQuery = $dbh->prepare($catSql);
-        $catQuery->bindParam(':category', $category, PDO::PARAM_STR);
-        $catQuery->execute();
-
-        if ($catQuery->rowCount() == 0){
+        if ($categoryId == "0"){
             $status = 1;
             $sql = "INSERT INTO  tblcategory(CategoryName,Status) VALUES(:category,:status)";
             $query = $dbh->prepare($sql);
@@ -30,12 +24,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $author = $_POST['author'];
         $authorId = $_POST['authorId'];
 
-        $authorSql = "SELECT id FROM tblauthors where AuthorName=:author";
-        $authorQuery = $dbh->prepare($authorSql);
-        $authorQuery->bindParam(':author', $author, PDO::PARAM_STR);
-        $authorQuery->execute();
-
-        if ($authorQuery->rowCount() == 0){
+        if ($authorId == "0"){
             $author = $_POST['author'];
             $sql = "INSERT INTO  tblauthors(AuthorName) VALUES(:author)";
             $query = $dbh->prepare($sql);
@@ -57,7 +46,7 @@ if (strlen($_SESSION['alogin']) == 0) {
         $query->bindParam(':classification_number', $classification_number, PDO::PARAM_STR); // Binding the new parameter
         $query->execute();
         $lastInsertId = $dbh->lastInsertId();
-        
+
         if ($lastInsertId) {
             $_SESSION['msg'] = "Book Listed successfully";
             header('location:manage-books.php');
