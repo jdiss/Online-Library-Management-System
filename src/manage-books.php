@@ -149,27 +149,36 @@ if (strlen($_SESSION['alogin']) == 0) {
                 <div class="row">
                     <div class="col-md-12">
                         <?php
+                        // Pagination logic
+                        $limit = 10; // Number of records per page
+                        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        $offset = ($page - 1) * $limit;
+
                         $sql = "
-                SELECT 
-                tblbooks.BookName,
-                tblcategory.CategoryName,
-                tblauthors.AuthorName,
-                tblbooks.ISBNNumber,
-                tblbooks.BookPrice,
-                tblbooks.classification_number,
-                tblbooks.id as bookid 
-                , (SELECT COUNT(*) FROM tblissuedbookdetails WHERE BookId = tblbooks.id and RetrunStatus is NULL) AS issued_count
-                , (SELECT COUNT(BookId) < tblbooks.`BookPrice` AS is_available 
-                FROM tblissuedbookdetails 
-                WHERE BookId = tblbooks.id AND RetrunStatus is NULL) AS is_available
-                from  tblbooks 
-                join tblcategory on tblcategory.id=tblbooks.CatId 
-                join tblauthors on tblauthors.id=tblbooks.AuthorId
-                order by tblbooks.id desc
-               ";
+                        SELECT 
+                        tblbooks.BookName,
+                        tblcategory.CategoryName,
+                        tblauthors.AuthorName,
+                        tblbooks.ISBNNumber,
+                        tblbooks.BookPrice,
+                        tblbooks.classification_number,
+                        tblbooks.id as bookid 
+                        , (SELECT COUNT(*) FROM tblissuedbookdetails WHERE BookId = tblbooks.id and RetrunStatus is NULL) AS issued_count
+                        , (SELECT COUNT(BookId) < tblbooks.`BookPrice` AS is_available 
+                        FROM tblissuedbookdetails 
+                        WHERE BookId = tblbooks.id AND RetrunStatus is NULL) AS is_available
+                        from  tblbooks 
+                        join tblcategory on tblcategory.id=tblbooks.CatId 
+                        join tblauthors on tblauthors.id=tblbooks.AuthorId
+                        order by tblbooks.id desc
+                        LIMIT :offset, :limit
+                       ";
                         $query = $dbh->prepare($sql);
+                        $query->bindParam(':offset', $offset, PDO::PARAM_INT);
+                        $query->bindParam(':limit', $limit, PDO::PARAM_INT);
                         $query->execute();
                         $results = $query->fetchAll(PDO::FETCH_OBJ);
+
                         if ($query->rowCount() > 0) {
                             foreach ($results as $result) {
                                 ?>
@@ -221,6 +230,23 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 </div>
                             <?php }
                         } ?>
+
+                        <!-- Pagination -->
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <?php
+                                $sql = "SELECT COUNT(*) FROM tblbooks";
+                                $query = $dbh->prepare($sql);
+                                $query->execute();
+                                $totalBooks = $query->fetchColumn();
+                                $totalPages = ceil($totalBooks / $limit);
+
+                                for ($i = 1; $i <= $totalPages; $i++) {
+                                    echo '<a href="manage-books.php?page=' . $i . '" class="btn btn-secondary" style="font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold; background-color: ' . ($i == $page ? '#0d476d' : 'transparent') . ';">' . $i . '</a> ';
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
