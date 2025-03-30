@@ -76,7 +76,7 @@ if(isset($_POST['login']))
             font-size: 16px;
         }
         .logo {
-            max-width: 200px;
+            max-width: 100px;
             margin-bottom: 20px;
         }
         .system-title {
@@ -111,8 +111,11 @@ if(isset($_POST['login']))
     <div class="container">
         <div class="row">
             <div class="text-center">
-                <img src="assets/img/logo.png" class="img-responsive center-block logo" alt="Logo" />
-                <h1 class="system-title">LIBRARY MANAGEMENT SYSTEM</h1>
+                <img src="assets/img/logoicon.png" class="img-responsive center-block logo" alt="Logo" />
+                <h1 class="system-title">
+                Buddhist Cultural Center 
+                <span style="font-size: 15px; display: block;">LIBRARY MANAGEMENT SYSTEM</span>
+            </h1>
             </div>
         </div>
              
