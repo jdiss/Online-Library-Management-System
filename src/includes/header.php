@@ -9,24 +9,21 @@
     }
 
     .logo {
-        max-width: 200px;
-        margin-bottom: 20px;
-        float: left;
-        margin-right: 20px;
+        max-width: 100px;
+        margin-right: 0px;
     }
 
     .system-title {
         color: #ecf0f1;
         font-size: 25px;
         font-weight: 700;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        margin-left: auto;
+        align-self: center; /* Center align with logo */
     }
 
     .navbar-header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start; /* Changed to flex-start for better alignment */
         width: 100%;
     }
 
@@ -42,10 +39,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand">
-                <img src="assets/img/logo.png" class="img-responsive logo" alt="Logo" />
+            <a class="navbar-brand" href="#">
+                <img src="assets/img/logoicon.png" class="img-responsive logo" alt="Logo" />
             </a>
-            <h1 class="system-title">LIBRARY MANAGEMENT SYSTEM</h1>
+            <h2 class="system-title">
+                Buddhist Cultural Center 
+                <span style="font-size: 15px; display: block;">LIBRARY MANAGEMENT SYSTEM</span>
+            </h2>
         </div>
     </div>
 </div>
