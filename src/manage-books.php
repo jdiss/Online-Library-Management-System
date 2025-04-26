@@ -240,9 +240,19 @@ if (strlen($_SESSION['alogin']) == 0) {
                                 $query->execute();
                                 $totalBooks = $query->fetchColumn();
                                 $totalPages = ceil($totalBooks / $limit);
+                                $startPage = max(1, $page - 2);
+                                $endPage = min($totalPages, $page + 2);
 
-                                for ($i = 1; $i <= $totalPages; $i++) {
+                                if ($page > 1) {
+                                    echo '<a href="manage-books.php?page=' . ($page - 1) . '" class="btn btn-secondary" style="margin-right: 5px;font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold;">&laquo; Previous</a>';
+                                }
+
+                                for ($i = $startPage; $i <= $endPage; $i++) {
                                     echo '<a href="manage-books.php?page=' . $i . '" class="btn btn-secondary" style="font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold; background-color: ' . ($i == $page ? '#0d476d' : 'transparent') . ';">' . $i . '</a> ';
+                                }
+
+                                if ($page < $totalPages) {
+                                    echo '<a href="manage-books.php?page=' . ($page + 1) . '" class="btn btn-secondary" style="font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold;">Next &raquo;</a>';
                                 }
                                 ?>
                             </div>
