@@ -93,9 +93,10 @@ if (strlen($_SESSION['alogin']) == 0) {
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="form-group" style="display: flex; gap: 10px;">
                                     <input type="text" class="form-control" id="searchBar" placeholder="Search books..."
-                                        onkeyup="searchBooks()">
+                                        value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                                    <button onclick="searchBooks()" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -154,6 +155,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                         $offset = ($page - 1) * $limit;
 
+                        $search = isset($_GET['search']) ? $_GET['search'] : '';
                         $sql = "
                         SELECT 
                         tblbooks.BookName,
@@ -170,12 +172,19 @@ if (strlen($_SESSION['alogin']) == 0) {
                         from  tblbooks 
                         join tblcategory on tblcategory.id=tblbooks.CatId 
                         join tblauthors on tblauthors.id=tblbooks.AuthorId
+                        WHERE tblbooks.BookName LIKE :search
+                        OR tblbooks.ISBNNumber LIKE :search
+                        OR tblbooks.classification_number LIKE :search
+                        OR tblcategory.CategoryName LIKE :search
+                        OR tblauthors.AuthorName LIKE :search
                         order by tblbooks.id desc
                         LIMIT :offset, :limit
                        ";
+                        $searchParam = "%$search%";
                         $query = $dbh->prepare($sql);
                         $query->bindParam(':offset', $offset, PDO::PARAM_INT);
                         $query->bindParam(':limit', $limit, PDO::PARAM_INT);
+                        $query->bindParam(':search', $searchParam, PDO::PARAM_STR);
                         $query->execute();
                         $results = $query->fetchAll(PDO::FETCH_OBJ);
 
@@ -235,24 +244,33 @@ if (strlen($_SESSION['alogin']) == 0) {
                         <div class="row">
                             <div class="col-md-12 text-center">
                                 <?php
-                                $sql = "SELECT COUNT(*) FROM tblbooks";
+                                $sql = "SELECT COUNT(*) FROM tblbooks 
+                                join tblcategory on tblcategory.id=tblbooks.CatId 
+                                join tblauthors on tblauthors.id=tblbooks.AuthorId
+                                WHERE tblbooks.BookName LIKE :search
+                                OR tblbooks.ISBNNumber LIKE :search
+                                OR tblbooks.classification_number LIKE :search
+                                OR tblcategory.CategoryName LIKE :search
+                                OR tblauthors.AuthorName LIKE :search";
                                 $query = $dbh->prepare($sql);
+                                $query->bindParam(':search', $searchParam, PDO::PARAM_STR);
                                 $query->execute();
                                 $totalBooks = $query->fetchColumn();
                                 $totalPages = ceil($totalBooks / $limit);
                                 $startPage = max(1, $page - 2);
                                 $endPage = min($totalPages, $page + 2);
 
+                                $searchQuery = isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '';
                                 if ($page > 1) {
-                                    echo '<a href="manage-books.php?page=' . ($page - 1) . '" class="btn btn-secondary" style="margin-right: 5px;font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold;">&laquo; Previous</a>';
+                                    echo '<a href="manage-books.php?page=' . ($page - 1) . $searchQuery . '" class="btn btn-secondary" style="margin-right: 5px;font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold;">&laquo; Previous</a>';
                                 }
 
                                 for ($i = $startPage; $i <= $endPage; $i++) {
-                                    echo '<a href="manage-books.php?page=' . $i . '" class="btn btn-secondary" style="font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold; background-color: ' . ($i == $page ? '#0d476d' : 'transparent') . ';">' . $i . '</a> ';
+                                    echo '<a href="manage-books.php?page=' . $i . $searchQuery . '" class="btn btn-secondary" style="font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold; background-color: ' . ($i == $page ? '#0d476d' : 'transparent') . ';">' . $i . '</a> ';
                                 }
 
                                 if ($page < $totalPages) {
-                                    echo '<a href="manage-books.php?page=' . ($page + 1) . '" class="btn btn-secondary" style="font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold;">Next &raquo;</a>';
+                                    echo '<a href="manage-books.php?page=' . ($page + 1) . $searchQuery . '" class="btn btn-secondary" style="font-size: 1.2em; color: white; border: 1px solid white; font-weight: bold;">Next &raquo;</a>';
                                 }
                                 ?>
                             </div>
@@ -277,21 +295,28 @@ if (strlen($_SESSION['alogin']) == 0) {
         <script src="assets/js/custom.js"></script>
         <script>
             function searchBooks() {
-                var input, filter, panels, panel, title, i, txtValue;
-                input = document.getElementById("searchBar");
-                filter = input.value.toUpperCase();
-                panels = document.getElementsByClassName("book-panel");
-                for (i = 0; i < panels.length; i++) {
-                    panel = panels[i];
-                    title = panel.getElementsByTagName("h5")[0];
-                    txtValue = title.textContent || title.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        panel.style.display = "";
-                    } else {
-                        panel.style.display = "none";
-                    }
+                var input = document.getElementById("searchBar");
+                var searchValue = input.value;
+                if (searchValue.trim() === '') {
+                    window.location.href = 'manage-books.php';
+                } else {
+                    window.location.href = 'manage-books.php?search=' + encodeURIComponent(searchValue);
                 }
             }
+
+            // Add enter key support for search
+            document.getElementById("searchBar").addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    searchBooks();
+                }
+            });
+
+            // Add blur event to handle clearing search
+            document.getElementById("searchBar").addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    searchBooks();
+                }
+            });
         </script>
     </body>
 
