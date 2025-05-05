@@ -11,26 +11,41 @@ if (strlen($_SESSION['alogin']) == 0) {
         $category = $_POST['category'];
         $categoryId = $_POST['categoryId'];
 
-        if ($categoryId == "0"){
-            $status = 1;
-            $sql = "INSERT INTO  tblcategory(CategoryName,Status) VALUES(:category,:status)";
-            $query = $dbh->prepare($sql);
-            $query->bindParam(':category', $category, PDO::PARAM_STR);
-            $query->bindParam(':status', $status, PDO::PARAM_STR);
-            $query->execute();
-            $categoryId = $dbh->lastInsertId();
-        }
+            $catSql = "SELECT id FROM tblcategory where CategoryName=:category";
+            $catQuery = $dbh->prepare($catSql);
+            $catQuery->bindParam(':category', $category, PDO::PARAM_STR);
+            $catQuery->execute();
+
+            if ($catQuery->rowCount() == 0){
+                $status = 1;
+                $sql = "INSERT INTO  tblcategory(CategoryName,Status) VALUES(:category,:status)";
+                $query = $dbh->prepare($sql);
+                $query->bindParam(':category', $category, PDO::PARAM_STR);
+                $query->bindParam(':status', $status, PDO::PARAM_STR);
+                $query->execute();
+                $categoryId = $dbh->lastInsertId();
+            } else {
+                $result = $catQuery->fetch(PDO::FETCH_OBJ);
+                $categoryId = $result->id;
+            }
 
         $author = $_POST['author'];
         $authorId = $_POST['authorId'];
 
-        if ($authorId == "0"){
-            $author = $_POST['author'];
+        $authorSql = "SELECT id FROM tblauthors where AuthorName=:author";
+        $authorQuery = $dbh->prepare($authorSql);
+        $authorQuery->bindParam(':author', $author, PDO::PARAM_STR);
+        $authorQuery->execute();
+
+        if ($authorQuery->rowCount() == 0){
             $sql = "INSERT INTO  tblauthors(AuthorName) VALUES(:author)";
             $query = $dbh->prepare($sql);
             $query->bindParam(':author', $author, PDO::PARAM_STR);
             $query->execute();
             $authorId = $dbh->lastInsertId();
+        } else {
+            $result = $authorQuery->fetch(PDO::FETCH_OBJ);
+            $authorId = $result->id;
         }
 
         $isbn = $_POST['isbn'];

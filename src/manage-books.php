@@ -97,6 +97,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                                     <input type="text" class="form-control" id="searchBar" placeholder="Search books..."
                                         value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                                     <button onclick="searchBooks()" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                                    <button onclick="clearFilter()" class="btn btn-secondary"><i class="fa fa-times"></i> Clear</button>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -302,6 +303,10 @@ if (strlen($_SESSION['alogin']) == 0) {
                 } else {
                     window.location.href = 'manage-books.php?search=' + encodeURIComponent(searchValue);
                 }
+            }
+
+            function clearFilter() {
+                window.location.href = 'manage-books.php';
             }
 
             // Add enter key support for search
