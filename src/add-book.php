@@ -10,6 +10,17 @@ if (strlen($_SESSION['alogin']) == 0) {
         $bookname = $_POST['bookname'];
         $category = $_POST['category'];
         $categoryId = $_POST['categoryId'];
+        $isbn = $_POST['isbn'];
+
+        // Include validation
+        include('includes/validate_book.php');
+        $errors = validateBook($dbh, $bookname, $isbn);
+        
+        if (!empty($errors)) {
+            $_SESSION['error'] = implode(", ", $errors);
+            header('location:add-book.php');
+            exit();
+        }
 
             $catSql = "SELECT id FROM tblcategory where CategoryName=:category";
             $catQuery = $dbh->prepare($catSql);
@@ -77,6 +88,28 @@ if (strlen($_SESSION['alogin']) == 0) {
 
     <head>
         <?php include('includes/meta.php'); ?>
+        <style>
+            .wizard-steps {
+                display: flex;
+                border-bottom: 1px solid #ddd;
+                margin-bottom: 20px;
+            }
+            .wizard-step {
+                padding: 12px 24px;
+                cursor: pointer;
+                position: relative;
+                background: transparent;
+                border: none;
+                color: #666;
+                font-weight: 500;
+            }
+            .wizard-step.active {
+                color: #333;
+                background: transparent;
+                border-bottom: 2px solid #333;
+                margin-bottom: -1px;
+            }
+        </style>
     </head>
 
     <body>
@@ -120,51 +153,59 @@ if (strlen($_SESSION['alogin']) == 0) {
                     <?php } ?>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3"">
-<div class=" panel panel-info">
-                        <div class="panel-heading">
-                            Book Info
-                        </div>
-                        <div class="panel-body">
-                            <form role="form" method="post">
-                                <div class="form-group">
-                                    <label>Book Name<span style="color:red;">*</span></label>
-                                    <input class="form-control" type="text" name="bookname" autocomplete="off" required />
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                        <div class="panel panel-info">
+                            <div>
+                                <div class="wizard-steps">
+                                    <div class="wizard-step active" id="step1-indicator">Basic Info</div>
+                                    <div class="wizard-step" id="step2-indicator">Additional Details</div>
                                 </div>
+                            </div>
+                            <div class="panel-body">
+                                <form role="form" method="post" id="addBookForm">
+                                    <!-- Step 1: Basic Info -->
+                                    <div id="step1" class="wizard-section">
+                                        <div class="form-group">
+                                            <label>Book Name<span style="color:red;">*</span></label>
+                                            <input class="form-control" type="text" name="bookname" autocomplete="off" required />
+                                        </div>
 
-                                <div class="form-group">
-                                    <?php $categoryName = ''?>
-                                    <?php $categoryId = 0?>
-                                    <?php include 'includes/category.php' ; ?>
-                                </div>
+                                        <div class="form-group">
+                                            <?php $categoryName = ''?>
+                                            <?php $categoryId = 0?>
+                                            <?php include 'includes/category.php' ; ?>
+                                        </div>
 
+                                        <div class="form-group">
+                                            <?php $authorName = ''?>
+                                            <?php $authorId = 0?>
+                                            <?php include 'includes/authors.php' ; ?>
+                                        </div>
+                                        
+                                        <button type="button" class="btn btn-info" onclick="nextStep()">Next</button>
+                                        <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
+                                    </div>
 
-                                <div class="form-group">
-                                    <?php $authorName = ''?>
-                                    <?php $authorId = 0?>
-                                    <?php include 'includes/authors.php' ; ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>ISBN Number</label>
-                                    <input class="form-control" type="text" name="isbn" />
-                                    <p class="help-block">An ISBN is an International Standard Book Number.ISBN Must be
-                                        unique</p>
-                                </div>
-                                <div class="form-group">
-                                    <label>Classification Number</label>
-                                    <input class="form-control" type="text" name="classification_number"/>
-                                    <p class="help-block">Classification number helps in organizing books in the library.</p>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Number of books<span style="color:red;">*</span></label>
-                                    <input class="form-control" type="text" name="price" autocomplete="off"
-                                        required="required" value="0" />
-                                </div>
-                                <button type="submit" name="add" class="btn btn-info">Add </button>
-                                <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
-                            </form>
+                                    <!-- Step 2: Additional Details -->
+                                    <div id="step2" class="wizard-section" style="display: none;">
+                                        <div class="form-group">
+                                            <label>ISBN Number</label>
+                                            <input class="form-control" type="text" name="isbn" />
+                                            <p class="help-block">An ISBN is an International Standard Book Number.ISBN Must be unique</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Classification Number</label>
+                                            <input class="form-control" type="text" name="classification_number"/>
+                                            <p class="help-block">Classification number helps in organizing books in the library.</p>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Number of books<span style="color:red;">*</span></label>
+                                            <input class="form-control" type="text" name="price" autocomplete="off" required="required" value="0" />
+                                        </div>
+                                        <button type="button" class="btn btn-secondary" onclick="previousStep()">Previous</button>
+                                        <button type="submit" name="add" class="btn btn-info">Add Book</button>
+                                    </div>
+                                </form>
                         </div>
                     </div>
                 </div>
@@ -183,6 +224,83 @@ if (strlen($_SESSION['alogin']) == 0) {
         <script src="assets/js/bootstrap.js"></script>
         <!-- CUSTOM SCRIPTS  -->
         <script src="assets/js/custom.js"></script>
+           <!-- Modal for validation messages -->
+            <div class="modal fade" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="validationModalLabel">Validation Error</h4>
+                        </div>
+                        <div class="modal-body" id="validationMessage">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+            function showValidationError(message) {
+                document.getElementById('validationMessage').textContent = message;
+                $('#validationModal').modal('show');
+            }
+
+            function nextStep() {
+                // Validate required fields in step 1
+                var bookname = document.querySelector('input[name="bookname"]').value;
+                var category = document.querySelector('input[name="category"]').value;
+                var author = document.querySelector('input[name="author"]').value;
+
+                var errors = [];
+                
+                if (!bookname.trim()) {
+                    errors.push('Please enter the book name');
+                }
+                if (!category.trim()) {
+                    errors.push('Please select a category');
+                }
+                if (!author.trim()) {
+                    errors.push('Please select an author');
+                }
+
+                if (errors.length > 0) {
+                    showValidationError(errors.join('\n'));
+                    return;
+                }
+
+                // Check if book name already exists using jQuery AJAX
+                jQuery.ajax({
+                    url: 'check-book-exists.php',
+                    method: 'POST',
+                    data: { bookname: bookname },
+                    success: function(response) {
+                        if (response.exists) {
+                            showValidationError('A book with this name already exists');
+                        } else {
+                            // Hide step 1 and show step 2
+                            document.getElementById('step1').style.display = 'none';
+                            document.getElementById('step2').style.display = 'block';
+                        }
+                            
+                            // Update indicators
+                document.getElementById('step1-indicator').classList.remove('active');
+                document.getElementById('step2-indicator').classList.add('active');
+                    }
+                });
+            }
+
+            function previousStep() {
+                // Hide step 2 and show step 1
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step1').style.display = 'block';
+                
+                // Update indicators
+                document.getElementById('step2-indicator').classList.remove('active');
+                document.getElementById('step1-indicator').classList.add('active');
+            }
+        </script>
     </body>
 
     </html>

@@ -10,6 +10,10 @@ if (strlen($_SESSION['alogin']) == 0) {
         $bookname = $_POST['bookname'];
         $category = $_POST['category'];
         $categoryId = $_POST['categoryId'];
+        $isbn = $_POST['isbn'];
+        $bookid = intval($_GET['bookid']);
+
+        // No validation needed for book updates
 
         $catSql = "SELECT id FROM tblcategory where CategoryName=:category";
         $catQuery = $dbh->prepare($catSql);
@@ -65,20 +69,7 @@ if (strlen($_SESSION['alogin']) == 0) {
     <html xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>YBRCC Library Management System | Manage Issued Books</title>
-    <link rel="icon" href="assets/img/cropped-fav-32x32.png" sizes="32x32">
-        <!-- BOOTSTRAP CORE STYLE  -->
-        <link href="assets/css/bootstrap.css" rel="stylesheet" />
-        <!-- FONT AWESOME STYLE  -->
-        <link href="assets/css/font-awesome.css" rel="stylesheet" />
-        <!-- CUSTOM STYLE  -->
-        <link href="assets/css/style.css" rel="stylesheet" />
-        <!-- GOOGLE FONT -->
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+        <?php include('includes/meta.php'); ?>
 
     </head>
 
@@ -99,11 +90,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3"">
 <div class=" panel panel-info">
-                        <div class="panel-heading">
-                            Book Info
-                        </div>
                         <div class="panel-body">
-                            <form role="form" method="post">
+                            <form role="form" method="post" id="editBookForm">
                                 <?php
                                 $bookid = intval($_GET['bookid']);
                                 $sql = "SELECT tblbooks.BookName,tblcategory.CategoryName,tblcategory.id as cid,tblauthors.AuthorName,tblauthors.id as athrid,tblbooks.ISBNNumber,tblbooks.BookPrice,tblbooks.id as bookid,tblbooks.classification_number from  tblbooks join tblcategory on tblcategory.id=tblbooks.CatId join tblauthors on tblauthors.id=tblbooks.AuthorId where tblbooks.id=:bookid";
@@ -123,15 +111,13 @@ if (strlen($_SESSION['alogin']) == 0) {
                                         <div class="form-group">
                                             <?php $categoryName = $result->CategoryName;?>
                                             <?php $categoryId = $result->cid;?>
-                                        <?php include('includes/category.php'); ?>
+                                            <?php include('includes/category.php'); ?>
                                         </div>
-
 
                                         <div class="form-group">
                                             <?php $authorName = $result->AuthorName;?>
                                             <?php $authorId = $result->athrid;?>
                                             <?php include 'includes/authors.php' ; ?>
-                                            
                                         </div>
 
                                         <div class="form-group">
@@ -144,15 +130,14 @@ if (strlen($_SESSION['alogin']) == 0) {
                                             <input class="form-control" type="text" name="classification_number" value="<?php echo htmlentities($result->classification_number); ?>" />
                                             <p class="help-block">Classification number helps in organizing books in the library.</p>
                                         </div>
-
                                         <div class="form-group">
-                                        <label>Number of books<span style="color:red;">*</span></label>
+                                            <label>Number of books<span style="color:red;">*</span></label>
                                             <input class="form-control" type="text" name="price" value="<?php echo htmlentities($result->BookPrice); ?>" required="required" />
                                         </div>
+                                        <button type="submit" name="update" class="btn btn-info">Update</button>
+                                        <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
                                 <?php }
                                 } ?>
-                                <button type="submit" name="update" class="btn btn-info">Update </button>
-                                <a href="manage-books.php" class="btn btn-secondary">Go Back</a>
                             </form>
                         </div>
                     </div>
@@ -172,6 +157,24 @@ if (strlen($_SESSION['alogin']) == 0) {
         <script src="assets/js/bootstrap.js"></script>
         <!-- CUSTOM SCRIPTS  -->
         <script src="assets/js/custom.js"></script>
+        <!-- Modal for validation messages -->
+        <div class="modal fade" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="validationModalLabel">Validation Error</h4>
+                    </div>
+                    <div class="modal-body" id="validationMessage">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </body>
 
     </html>
