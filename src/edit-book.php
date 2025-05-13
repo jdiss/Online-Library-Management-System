@@ -13,7 +13,6 @@ if (strlen($_SESSION['alogin']) == 0) {
         $isbn = $_POST['isbn'];
         $bookid = intval($_GET['bookid']);
 
-        // No validation needed for book updates
 
         $catSql = "SELECT id FROM tblcategory where CategoryName=:category";
         $catQuery = $dbh->prepare($catSql);

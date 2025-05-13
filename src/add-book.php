@@ -12,16 +12,6 @@ if (strlen($_SESSION['alogin']) == 0) {
         $categoryId = $_POST['categoryId'];
         $isbn = $_POST['isbn'];
 
-        // Include validation
-        include('includes/validate_book.php');
-        $errors = validateBook($dbh, $bookname, $isbn);
-        
-        if (!empty($errors)) {
-            $_SESSION['error'] = implode(", ", $errors);
-            header('location:add-book.php');
-            exit();
-        }
-
             $catSql = "SELECT id FROM tblcategory where CategoryName=:category";
             $catQuery = $dbh->prepare($catSql);
             $catQuery->bindParam(':category', $category, PDO::PARAM_STR);
@@ -257,10 +247,16 @@ if (strlen($_SESSION['alogin']) == 0) {
                 
                 if (!bookname.trim()) {
                     errors.push('Please enter the book name');
+                } else if (bookname.length < 2) {
+                    errors.push('Book name must be at least 2 characters long');
+                } else if (bookname.length > 255) {
+                    errors.push('Book name cannot exceed 255 characters');
                 }
+
                 if (!category.trim()) {
                     errors.push('Please select a category');
                 }
+
                 if (!author.trim()) {
                     errors.push('Please select an author');
                 }
@@ -274,7 +270,7 @@ if (strlen($_SESSION['alogin']) == 0) {
                 jQuery.ajax({
                     url: 'check-book-exists.php',
                     method: 'POST',
-                    data: { bookname: bookname },
+                    data: { bookname: bookname, category : category, author : author  },
                     success: function(response) {
                         if (response.exists) {
                             showValidationError('A book with this name already exists');
